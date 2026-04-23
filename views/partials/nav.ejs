@@ -1,25 +1,32 @@
-<nav class="bg-secondary text-gray-200">
-  <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-    <div class="flex justify-between items-center h-16">
-      <div class="flex-shrink-0">
-        <a href="/" class="text-2xl font-bold text-accent">DevArena</a>
-      </div>
-      <div class="hidden md:flex space-x-6 items-center">
-        <% if (!currentUser) { %>
-          <a href="/login" class="hover:text-accent font-medium">Login</a>
-          <a href="/signup" class="hover:text-accent font-medium">Sign Up</a>
-        <% } else { %>
-          <a href="/dashboard/devproof" class="hover:text-accent font-medium">DevProof</a>
-          <a href="/dashboard/quickhire" class="hover:text-accent font-medium">QuickHire</a>
-          <a href="/dashboard/scrimlink" class="hover:text-accent font-medium">ScrimLink</a>
-          <a href="/dashboard/profile" class="hover:text-accent font-medium">Profile</a>
-          <a href="/messages" class="hover:text-accent font-medium">Inbox</a>
-          <% if (session && session.role === 'admin') { %>
-            <a href="/admin" class="hover:text-accent font-medium">Admin</a>
-          <% } %>
-          <a href="/logout" class="hover:text-accent font-medium">Logout</a>
+<%
+  const isLoggedIn = typeof currentUser !== 'undefined' && currentUser;
+  const safeSession = typeof session !== 'undefined' ? session : {};
+%>
+
+<nav class="site-nav">
+  <div class="nav-inner">
+    <a href="/" class="brand">
+      <span class="brand-mark">DA</span>
+      <span>DevArena</span>
+    </a>
+
+    <div class="nav-links">
+      <% if (!isLoggedIn) { %>
+        <a href="/login">Login</a>
+        <a href="/signup" class="nav-cta">Sign Up</a>
+      <% } else { %>
+        <a href="/dashboard/devproof">DevProof</a>
+        <a href="/dashboard/quickhire">QuickHire</a>
+        <a href="/dashboard/scrimlink">ScrimLink</a>
+        <a href="/dashboard/profile">Profile</a>
+        <a href="/messages">Inbox</a>
+
+        <% if (safeSession.role === 'admin') { %>
+          <a href="/admin">Admin</a>
         <% } %>
-      </div>
+
+        <a href="/logout" class="nav-cta">Logout</a>
+      <% } %>
     </div>
   </div>
 </nav>
