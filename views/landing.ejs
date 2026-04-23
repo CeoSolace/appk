@@ -1,13 +1,42 @@
-<%- include('partials/head', { title }) %>
-<main class="flex-1 flex items-center justify-center">
-  <div class="text-center p-8">
-    <h1 class="text-5xl font-extrabold mb-6 text-accent">DevArena</h1>
-    <p class="mb-8 text-lg max-w-xl mx-auto">A unified platform for developers, esports talent, and competitive teams. Build your portfolio, get hired, and find your next scrim all in one place.</p>
-    <% if (!currentUser) { %>
-    <a href="/signup" class="bg-accent text-white py-3 px-6 rounded hover:bg-blue-600">Get Started</a>
-    <% } else { %>
-    <a href="/dashboard/devproof" class="bg-accent text-white py-3 px-6 rounded hover:bg-blue-600">Go to Dashboard</a>
-    <% } %>
-  </div>
+<%- include('partials/head', { title: 'DevArena - Developer, Hiring and Scrim Platform' }) %>
+
+<main>
+  <section class="hero">
+    <div class="hero-bg"></div>
+
+    <div class="hero-content">
+      <p class="eyebrow">DevProof • QuickHire • ScrimLink</p>
+      <h1>One profile for developers, esports talent and competitive teams.</h1>
+      <p class="hero-copy">
+        Build a GitHub-powered portfolio, sell your services, find esports teams and organise scrims from one clean platform.
+      </p>
+
+      <div class="hero-actions">
+        <a href="/signup" class="btn-primary">Start Building</a>
+        <a href="/login" class="btn-secondary">Login</a>
+      </div>
+    </div>
+  </section>
+
+  <section class="feature-grid">
+    <article class="feature-card">
+      <span>01</span>
+      <h2>DevProof</h2>
+      <p>Import GitHub projects, showcase demos and build a clean developer identity.</p>
+    </article>
+
+    <article class="feature-card">
+      <span>02</span>
+      <h2>QuickHire</h2>
+      <p>List your skills, pricing, availability and proof so people can hire you internally.</p>
+    </article>
+
+    <article class="feature-card">
+      <span>03</span>
+      <h2>ScrimLink</h2>
+      <p>Create teams, post scrims and connect with competitive players without needing email.</p>
+    </article>
+  </section>
 </main>
+
 <%- include('partials/footer') %>
