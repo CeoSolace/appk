@@ -1,0 +1,21 @@
+<%- include('../partials/head', { title }) %>
+<main class="flex-1 p-4 container mx-auto">
+  <h1 class="text-3xl font-bold mb-4"><%= project.name %></h1>
+  <p class="mb-4"><%= project.description %></p>
+  <div class="mb-4 space-x-4">
+    <% if (project.repoUrl) { %>
+      <a href="<%= project.repoUrl %>" target="_blank" rel="noopener" class="text-accent underline">View Repository</a>
+    <% } %>
+    <% if (project.liveDemoUrl) { %>
+      <a href="<%= project.liveDemoUrl %>" target="_blank" rel="noopener" class="text-accent underline">Live Demo</a>
+    <% } %>
+  </div>
+  <% if (project.screenshots && project.screenshots.length) { %>
+    <div class="grid gap-4 md:grid-cols-2 lg:grid-cols-3">
+      <% project.screenshots.forEach(function(img) { %>
+        <img src="<%= img.url %>" alt="Screenshot" class="rounded w-full">
+      <% }); %>
+    </div>
+  <% } %>
+</main>
+<%- include('../partials/footer') %>

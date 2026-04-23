@@ -1,0 +1,59 @@
+<%- include('../partials/head', { title }) %>
+<main class="flex-1 p-4 container mx-auto">
+  <h1 class="text-3xl font-bold mb-4">Edit Profile</h1>
+  <% if (errors && errors.length) { %>
+    <div class="bg-red-600 text-white p-2 mb-4 rounded">
+      <% errors.forEach(function(error) { %>
+        <p><%= error.msg %></p>
+      <% }); %>
+    </div>
+  <% } %>
+  <form action="/dashboard/profile" method="POST" class="space-y-4">
+    <input type="hidden" name="_csrf" value="<%= csrfToken %>">
+    <div>
+      <label class="block mb-1" for="displayName">Display Name</label>
+      <input type="text" id="displayName" name="displayName" value="<%= profile.displayName || '' %>" class="w-full p-2 rounded text-black" required />
+    </div>
+    <div>
+      <label class="block mb-1" for="bio">Bio</label>
+      <textarea id="bio" name="bio" rows="4" class="w-full p-2 rounded text-black"><%= profile.bio || '' %></textarea>
+    </div>
+    <div>
+      <label class="block mb-1" for="location">Location</label>
+      <input type="text" id="location" name="location" value="<%= profile.location || '' %>" class="w-full p-2 rounded text-black" />
+    </div>
+    <div>
+      <label class="block mb-1" for="tags">Tags (comma separated)</label>
+      <input type="text" id="tags" name="tags" value="<%= profile.tags ? profile.tags.join(', ') : '' %>" class="w-full p-2 rounded text-black" />
+    </div>
+    <h2 class="text-xl font-semibold">Social Links</h2>
+    <div class="grid md:grid-cols-2 gap-4">
+      <div>
+        <label class="block mb-1" for="github">GitHub</label>
+        <input type="url" id="github" name="github" value="<%= profile.socials && profile.socials.github || '' %>" class="w-full p-2 rounded text-black" />
+      </div>
+      <div>
+        <label class="block mb-1" for="twitter">Twitter</label>
+        <input type="url" id="twitter" name="twitter" value="<%= profile.socials && profile.socials.twitter || '' %>" class="w-full p-2 rounded text-black" />
+      </div>
+      <div>
+        <label class="block mb-1" for="linkedin">LinkedIn</label>
+        <input type="url" id="linkedin" name="linkedin" value="<%= profile.socials && profile.socials.linkedin || '' %>" class="w-full p-2 rounded text-black" />
+      </div>
+      <div>
+        <label class="block mb-1" for="twitch">Twitch</label>
+        <input type="url" id="twitch" name="twitch" value="<%= profile.socials && profile.socials.twitch || '' %>" class="w-full p-2 rounded text-black" />
+      </div>
+      <div>
+        <label class="block mb-1" for="youtube">YouTube</label>
+        <input type="url" id="youtube" name="youtube" value="<%= profile.socials && profile.socials.youtube || '' %>" class="w-full p-2 rounded text-black" />
+      </div>
+      <div>
+        <label class="block mb-1" for="website">Website</label>
+        <input type="url" id="website" name="website" value="<%= profile.socials && profile.socials.website || '' %>" class="w-full p-2 rounded text-black" />
+      </div>
+    </div>
+    <button type="submit" class="bg-accent text-white py-2 px-4 rounded hover:bg-blue-600">Save Profile</button>
+  </form>
+</main>
+<%- include('../partials/footer') %>

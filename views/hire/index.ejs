@@ -1,0 +1,26 @@
+<%- include('../partials/head', { title }) %>
+<main class="flex-1 p-4 container mx-auto">
+  <h1 class="text-3xl font-bold mb-6">Find Talent</h1>
+  <div class="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
+    <% hireProfiles.forEach(function(hire) { %>
+      <% const profile = profileMap[hire.userId._id]; %>
+      <div class="bg-secondary p-4 rounded shadow">
+        <h3 class="text-xl font-semibold"><a href="/u/<%= hire.userId.username %>" class="text-accent hover:underline"><%= profile.displayName %></a></h3>
+        <p class="text-sm text-gray-400 mb-2"><%= profile.bio %></p>
+        <p class="mb-2"><strong>Skills:</strong> <%= hire.skills.join(', ') %></p>
+        <p class="mb-2"><strong>Categories:</strong> <%= hire.categories.join(', ') %></p>
+        <p class="mb-2"><strong>Pricing:</strong> <%= hire.pricing %></p>
+        <p class="mb-4"><strong>Availability:</strong> <%= hire.availability %></p>
+        <% if (currentUser) { %>
+          <a href="/hire/<%= hire.userId.username %>" class="bg-accent text-white py-2 px-4 rounded hover:bg-blue-600">View Profile</a>
+        <% } else { %>
+          <a href="/login" class="bg-accent text-white py-2 px-4 rounded hover:bg-blue-600">Login to hire</a>
+        <% } %>
+      </div>
+    <% }); %>
+    <% if (hireProfiles.length === 0) { %>
+      <p>No active hire profiles available.</p>
+    <% } %>
+  </div>
+</main>
+<%- include('../partials/footer') %>

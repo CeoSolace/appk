@@ -1,0 +1,23 @@
+<%- include('../../partials/head', { title }) %>
+<main class="flex-1 p-4 container mx-auto">
+  <h1 class="text-3xl font-bold mb-4">Your Projects</h1>
+  <div class="mb-6">
+    <a href="/dashboard/devproof/import" class="bg-accent text-white py-2 px-4 rounded hover:bg-blue-600">Import from GitHub</a>
+  </div>
+  <% if (error) { %>
+    <div class="bg-red-600 p-2 text-white mb-4 rounded"><%= error %></div>
+  <% } %>
+  <div class="grid gap-4 md:grid-cols-2 lg:grid-cols-3">
+    <% projects.forEach(function(project) { %>
+      <div class="bg-secondary p-4 rounded shadow-sm">
+        <h3 class="text-xl font-semibold mb-2"><a href="/projects/<%= project.slug %>" class="text-accent hover:underline"><%= project.name %></a></h3>
+        <p class="text-sm text-gray-400"><%= project.description %></p>
+        <p class="mt-2 text-xs text-gray-500">Created: <%= project.createdAt.toDateString() %></p>
+      </div>
+    <% }); %>
+    <% if (projects.length === 0) { %>
+      <p>No projects found. Import from GitHub or add manually.</p>
+    <% } %>
+  </div>
+</main>
+<%- include('../../partials/footer') %>

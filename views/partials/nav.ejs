@@ -1,0 +1,25 @@
+<nav class="bg-secondary text-gray-200">
+  <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+    <div class="flex justify-between items-center h-16">
+      <div class="flex-shrink-0">
+        <a href="/" class="text-2xl font-bold text-accent">DevArena</a>
+      </div>
+      <div class="hidden md:flex space-x-6 items-center">
+        <% if (!currentUser) { %>
+          <a href="/login" class="hover:text-accent font-medium">Login</a>
+          <a href="/signup" class="hover:text-accent font-medium">Sign Up</a>
+        <% } else { %>
+          <a href="/dashboard/devproof" class="hover:text-accent font-medium">DevProof</a>
+          <a href="/dashboard/quickhire" class="hover:text-accent font-medium">QuickHire</a>
+          <a href="/dashboard/scrimlink" class="hover:text-accent font-medium">ScrimLink</a>
+          <a href="/dashboard/profile" class="hover:text-accent font-medium">Profile</a>
+          <a href="/messages" class="hover:text-accent font-medium">Inbox</a>
+          <% if (session && session.role === 'admin') { %>
+            <a href="/admin" class="hover:text-accent font-medium">Admin</a>
+          <% } %>
+          <a href="/logout" class="hover:text-accent font-medium">Logout</a>
+        <% } %>
+      </div>
+    </div>
+  </div>
+</nav>

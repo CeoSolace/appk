@@ -1,0 +1,19 @@
+<%- include('../partials/head', { title }) %>
+<main class="flex-1 p-4 container mx-auto">
+  <h1 class="text-3xl font-bold mb-6">Inbox</h1>
+  <div class="space-y-4">
+    <% threads.forEach(function(thread) { %>
+      <% const otherUserId = thread.participants.find((id) => id.toString() !== currentUser); %>
+      <div class="bg-secondary p-4 rounded">
+        <a href="/messages/<%= thread._id %>" class="text-accent hover:underline">
+          Conversation with User ID <%= otherUserId %>
+        </a>
+        <p class="text-xs text-gray-400">Updated: <%= new Date(thread.updatedAt).toLocaleString() %></p>
+      </div>
+    <% }); %>
+    <% if (!threads || threads.length === 0) { %>
+      <p>No messages found.</p>
+    <% } %>
+  </div>
+</main>
+<%- include('../partials/footer') %>

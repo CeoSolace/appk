@@ -1,0 +1,44 @@
+<%- include('../../partials/head', { title }) %>
+<main class="flex-1 p-4 container mx-auto">
+  <h1 class="text-3xl font-bold mb-4">Your Teams</h1>
+  <% if (errors && errors.length) { %>
+    <div class="bg-red-600 text-white p-2 mb-4 rounded">
+      <% errors.forEach(function(error) { %>
+        <p><%= error.msg %></p>
+      <% }); %>
+    </div>
+  <% } %>
+  <div class="mb-6">
+    <form action="/dashboard/scrimlink/teams" method="POST" class="space-y-4">
+      <input type="hidden" name="_csrf" value="<%= csrfToken %>">
+      <h2 class="text-xl font-semibold">Create a Team</h2>
+      <div>
+        <label class="block mb-1" for="name">Team Name</label>
+        <input type="text" id="name" name="name" class="w-full p-2 rounded text-black" required />
+      </div>
+      <div>
+        <label class="block mb-1" for="description">Description</label>
+        <textarea id="description" name="description" rows="3" class="w-full p-2 rounded text-black" maxlength="500"></textarea>
+      </div>
+      <div>
+        <label class="block mb-1" for="tags">Tags (comma separated)</label>
+        <input type="text" id="tags" name="tags" class="w-full p-2 rounded text-black" />
+      </div>
+      <button type="submit" class="bg-accent text-white py-2 px-4 rounded hover:bg-blue-600">Create Team</button>
+    </form>
+  </div>
+  <h2 class="text-2xl font-bold mb-4">Existing Teams</h2>
+  <div class="grid gap-4 md:grid-cols-2 lg:grid-cols-3">
+    <% teams.forEach(function(team) { %>
+      <div class="bg-secondary p-4 rounded shadow">
+        <h3 class="text-xl font-semibold mb-2"><a href="/teams/<%= team.slug %>" class="text-accent hover:underline"><%= team.name %></a></h3>
+        <p class="text-sm text-gray-400"><%= team.description %></p>
+        <p class="mt-2 text-xs text-gray-500">Created: <%= team.createdAt.toDateString() %></p>
+      </div>
+    <% }); %>
+    <% if (!teams || teams.length === 0) { %>
+      <p>You have no teams yet.</p>
+    <% } %>
+  </div>
+</main>
+<%- include('../../partials/footer') %>

@@ -1,0 +1,29 @@
+<%- include('../partials/head', { title }) %>
+<main class="flex-1 flex items-center justify-center p-4">
+  <div class="bg-secondary/80 p-8 rounded-lg shadow-lg w-full max-w-md backdrop-blur-md">
+    <h2 class="text-2xl mb-4 font-bold">Login</h2>
+    <% if (errors && errors.length) { %>
+      <div class="bg-red-500 text-white p-2 mb-4 rounded">
+        <% errors.forEach(function(error) { %>
+          <p><%= error.msg %></p>
+        <% }); %>
+      </div>
+    <% } %>
+    <form action="/login" method="POST" class="space-y-4">
+      <input type="hidden" name="_csrf" value="<%= csrfToken %>" />
+      <div>
+        <label class="block mb-1" for="identifier">Username or Email</label>
+        <input type="text" id="identifier" name="identifier" value="<%= data?.identifier || '' %>" class="w-full p-2 rounded text-black" required />
+      </div>
+      <div>
+        <label class="block mb-1" for="password">Password</label>
+        <input type="password" id="password" name="password" class="w-full p-2 rounded text-black" required />
+      </div>
+      <div class="flex justify-between items-center">
+        <button type="submit" class="bg-accent text-white py-2 px-4 rounded hover:bg-blue-600">Login</button>
+        <a href="/signup" class="text-accent underline">Sign Up</a>
+      </div>
+    </form>
+  </div>
+</main>
+<%- include('../partials/footer') %>

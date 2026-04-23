@@ -1,0 +1,35 @@
+<%- include('../partials/head', { title }) %>
+<main class="flex-1 p-4 container mx-auto">
+  <div class="mb-4">
+    <h1 class="text-3xl font-bold mb-1"><%= profile.displayName %></h1>
+    <p class="text-sm text-gray-400 mb-4"><%= profile.bio %></p>
+    <% if (currentUser && currentUser !== user._id.toString()) { %>
+      <a href="/messages/new/<%= user._id %>" class="bg-accent text-white py-2 px-4 rounded hover:bg-blue-600">Contact</a>
+    <% } %>
+  </div>
+  <div class="grid gap-6 md:grid-cols-2">
+    <div>
+      <h2 class="text-xl font-semibold mb-2">Hire Details</h2>
+      <p><strong>Skills:</strong> <%= hire.skills.join(', ') %></p>
+      <p><strong>Categories:</strong> <%= hire.categories.join(', ') %></p>
+      <p><strong>Pricing:</strong> <%= hire.pricing %></p>
+      <p><strong>Availability:</strong> <%= hire.availability %></p>
+    </div>
+    <div>
+      <h2 class="text-xl font-semibold mb-2">Work Proofs</h2>
+      <% proofs.forEach(function(proof) { %>
+        <div class="mb-4 bg-secondary p-3 rounded">
+          <h3 class="font-semibold"><%= proof.title %></h3>
+          <% if (proof.media && proof.media.url) { %>
+            <img src="<%= proof.media.url %>" alt="Proof" class="rounded my-2" />
+          <% } %>
+          <p class="text-sm text-gray-400"><%= proof.description %></p>
+        </div>
+      <% }); %>
+      <% if (!proofs || proofs.length === 0) { %>
+        <p>No proofs available.</p>
+      <% } %>
+    </div>
+  </div>
+</main>
+<%- include('../partials/footer') %>

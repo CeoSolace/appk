@@ -1,0 +1,23 @@
+<%- include('../partials/head', { title }) %>
+<main class="flex-1 p-4 container mx-auto">
+  <h1 class="text-3xl font-bold mb-6">Available Scrims</h1>
+  <div class="grid gap-4 md:grid-cols-2 lg:grid-cols-3">
+    <% scrims.forEach(function(scrim) { %>
+      <div class="bg-secondary p-4 rounded shadow">
+        <h3 class="text-xl font-semibold mb-1"><a href="/teams/<%= scrim.team.slug %>" class="text-accent hover:underline"><%= scrim.team.name %></a></h3>
+        <p class="text-sm text-gray-400 mb-2">Region: <%= scrim.region %></p>
+        <p class="text-sm text-gray-400 mb-2">Schedule: <%= scrim.schedule ? new Date(scrim.schedule).toLocaleString() : 'Anytime' %></p>
+        <p class="mb-3"><%= scrim.description %></p>
+        <% if (currentUser) { %>
+          <a href="/messages/new/<%= scrim.team.creator %>" class="bg-accent text-white py-2 px-4 rounded hover:bg-blue-600">Inquire</a>
+        <% } else { %>
+          <a href="/login" class="bg-accent text-white py-2 px-4 rounded hover:bg-blue-600">Login to inquire</a>
+        <% } %>
+      </div>
+    <% }); %>
+    <% if (!scrims || scrims.length === 0) { %>
+      <p>No scrims available.</p>
+    <% } %>
+  </div>
+</main>
+<%- include('../partials/footer') %>

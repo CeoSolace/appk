@@ -1,0 +1,16 @@
+<%- include('../partials/head', { title }) %>
+<main class="flex-1 p-4 container mx-auto">
+  <h1 class="text-3xl font-bold mb-6">Teams</h1>
+  <div class="grid gap-4 md:grid-cols-2 lg:grid-cols-3">
+    <% teams.forEach(function(team) { %>
+      <div class="bg-secondary p-4 rounded shadow">
+        <h3 class="text-xl font-semibold mb-2"><a href="/teams/<%= team.slug %>" class="text-accent hover:underline"><%= team.name %></a></h3>
+        <p class="text-sm text-gray-400"><%= team.description %></p>
+      </div>
+    <% }); %>
+    <% if (!teams || teams.length === 0) { %>
+      <p>No teams available.</p>
+    <% } %>
+  </div>
+</main>
+<%- include('../partials/footer') %>

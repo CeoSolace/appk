@@ -1,0 +1,52 @@
+<%- include('../partials/head', { title }) %>
+<main class="flex-1 p-4 container mx-auto">
+  <h1 class="text-3xl font-bold mb-2"><%= team.name %></h1>
+  <p class="mb-4"><%= team.description %></p>
+  <div class="grid gap-6 md:grid-cols-2">
+    <div>
+      <h2 class="text-xl font-semibold mb-2">Roster</h2>
+      <% members.forEach(function(member) { %>
+        <div class="mb-2">
+          <span class="font-semibold"><%= member.user.username %></span> - <%= member.role %>
+        </div>
+      <% }); %>
+      <% if (members.length === 0) { %>
+        <p>No members found.</p>
+      <% } %>
+    </div>
+    <div>
+      <h2 class="text-xl font-semibold mb-2">Scrim Posts</h2>
+      <% if (scrims && scrims.length) { %>
+        <% scrims.forEach(function(scrim) { %>
+          <div class="mb-3 bg-secondary p-3 rounded">
+            <p><strong>Region:</strong> <%= scrim.region %></p>
+            <p><strong>Schedule:</strong> <%= scrim.schedule ? new Date(scrim.schedule).toLocaleString() : 'Anytime' %></p>
+            <p class="mt-1"><%= scrim.description %></p>
+          </div>
+        <% }); %>
+      <% } else { %>
+        <p>No scrims posted.</p>
+      <% } %>
+      <% if (currentUser && currentUser === team.creator.toString()) { %>
+        <form action="/teams/<%= team._id %>/scrims" method="POST" class="mt-4 space-y-2">
+          <input type="hidden" name="_csrf" value="<%= csrfToken %>" />
+          <h3 class="text-lg font-semibold">Create Scrim</h3>
+          <div>
+            <label class="block mb-1" for="region">Region</label>
+            <input type="text" id="region" name="region" class="w-full p-2 rounded text-black" required />
+          </div>
+          <div>
+            <label class="block mb-1" for="schedule">Schedule (optional)</label>
+            <input type="datetime-local" id="schedule" name="schedule" class="w-full p-2 rounded text-black" />
+          </div>
+          <div>
+            <label class="block mb-1" for="description">Description</label>
+            <textarea id="description" name="description" rows="3" class="w-full p-2 rounded text-black" required></textarea>
+          </div>
+          <button type="submit" class="bg-accent text-white py-2 px-4 rounded hover:bg-blue-600">Post Scrim</button>
+        </form>
+      <% } %>
+    </div>
+  </div>
+</main>
+<%- include('../partials/footer') %>

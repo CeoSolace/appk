@@ -1,0 +1,61 @@
+<%- include('../partials/head', { title }) %>
+<main class="flex-1">
+  <% if (profile && profile.banner && profile.banner.url) { %>
+    <div class="h-48 bg-cover bg-center" style="background-image: url('<%= profile.banner.url %>')"></div>
+  <% } %>
+  <div class="container mx-auto p-4">
+    <div class="flex items-center mb-4 space-x-4">
+      <% if (profile && profile.avatar && profile.avatar.url) { %>
+        <img src="<%= profile.avatar.url %>" alt="Avatar" class="h-24 w-24 rounded-full">
+      <% } else { %>
+        <div class="h-24 w-24 rounded-full bg-secondary flex items-center justify-center">
+          <span class="text-2xl"><%= user.username.charAt(0).toUpperCase() %></span>
+        </div>
+      <% } %>
+      <div>
+        <h1 class="text-3xl font-bold"><%= profile.displayName || user.username %></h1>
+        <p class="text-gray-400"><%= profile.bio %></p>
+        <% if (currentUser && currentUser !== user._id.toString()) { %>
+          <a href="/messages/new/<%= user._id %>" class="bg-accent text-white py-2 px-4 mt-2 inline-block rounded hover:bg-blue-600">Message</a>
+        <% } %>
+      </div>
+    </div>
+    <div class="grid gap-8 md:grid-cols-2 lg:grid-cols-3">
+      <% if (projects && projects.length && (!profile.visibility || profile.visibility.showProjects !== false)) { %>
+        <div>
+          <h2 class="text-xl font-semibold mb-2">Projects</h2>
+          <% projects.forEach(function(project) { %>
+            <div class="mb-3">
+              <a href="/projects/<%= project.slug %>" class="text-accent hover:underline font-semibold"><%= project.name %></a>
+              <p class="text-sm text-gray-400"><%= project.description %></p>
+            </div>
+          <% }); %>
+        </div>
+      <% } %>
+      <% if (hire && hire.isActive && (!profile.visibility || profile.visibility.showHire !== false)) { %>
+        <div>
+          <h2 class="text-xl font-semibold mb-2">Hire Me</h2>
+          <p><strong>Skills:</strong> <%= hire.skills.join(', ') %></p>
+          <p><strong>Categories:</strong> <%= hire.categories.join(', ') %></p>
+          <p><strong>Pricing:</strong> <%= hire.pricing %></p>
+          <p><strong>Availability:</strong> <%= hire.availability %></p>
+          <% if (currentUser && currentUser !== user._id.toString()) { %>
+            <a href="/hire/<%= user.username %>" class="text-accent underline">View Hire Profile</a>
+          <% } %>
+        </div>
+      <% } %>
+      <% if (teams && teams.length && (!profile.visibility || profile.visibility.showTeams !== false)) { %>
+        <div>
+          <h2 class="text-xl font-semibold mb-2">Teams</h2>
+          <% teams.forEach(function(team) { %>
+            <div class="mb-3">
+              <a href="/teams/<%= team.slug %>" class="text-accent hover:underline font-semibold"><%= team.name %></a>
+              <p class="text-sm text-gray-400"><%= team.description %></p>
+            </div>
+          <% }); %>
+        </div>
+      <% } %>
+    </div>
+  </div>
+</main>
+<%- include('../partials/footer') %>

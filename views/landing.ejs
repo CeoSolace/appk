@@ -1,0 +1,13 @@
+<%- include('partials/head', { title }) %>
+<main class="flex-1 flex items-center justify-center">
+  <div class="text-center p-8">
+    <h1 class="text-5xl font-extrabold mb-6 text-accent">DevArena</h1>
+    <p class="mb-8 text-lg max-w-xl mx-auto">A unified platform for developers, esports talent, and competitive teams. Build your portfolio, get hired, and find your next scrim all in one place.</p>
+    <% if (!currentUser) { %>
+    <a href="/signup" class="bg-accent text-white py-3 px-6 rounded hover:bg-blue-600">Get Started</a>
+    <% } else { %>
+    <a href="/dashboard/devproof" class="bg-accent text-white py-3 px-6 rounded hover:bg-blue-600">Go to Dashboard</a>
+    <% } %>
+  </div>
+</main>
+<%- include('partials/footer') %>

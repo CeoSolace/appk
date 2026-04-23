@@ -1,0 +1,38 @@
+<%- include('../../partials/head', { title }) %>
+<main class="flex-1 p-4 container mx-auto">
+  <h1 class="text-3xl font-bold mb-4">Import Repositories</h1>
+  <% if (error) { %>
+    <div class="bg-red-600 p-2 text-white mb-4 rounded"><%= error %></div>
+  <% } %>
+  <form action="/dashboard/devproof/import" method="GET" class="mb-6">
+    <label for="username" class="block mb-2">GitHub Username</label>
+    <div class="flex space-x-2">
+      <input type="text" id="username" name="username" value="<%= username || '' %>" class="flex-grow p-2 rounded text-black" placeholder="Enter GitHub username" required />
+      <button type="submit" class="bg-accent text-white px-4 py-2 rounded hover:bg-blue-600">Fetch Repos</button>
+    </div>
+  </form>
+  <% if (repos && repos.length) { %>
+    <form action="/dashboard/devproof/import" method="POST">
+      <input type="hidden" name="_csrf" value="<%= csrfToken %>">
+      <input type="hidden" name="username" value="<%= username %>">
+      <div class="mb-4">
+        <p>Select repositories to import:</p>
+      </div>
+      <div class="grid gap-4 md:grid-cols-2 lg:grid-cols-3">
+        <% repos.forEach(function(repo) { %>
+          <div class="bg-secondary p-4 rounded">
+            <label class="flex items-start space-x-2">
+              <input type="checkbox" name="repos" value="<%= repo.full_name %>" class="mt-1">
+              <span>
+                <span class="font-semibold"><%= repo.name %></span><br>
+                <span class="text-sm text-gray-400"><%= repo.description %></span>
+              </span>
+            </label>
+          </div>
+        <% }); %>
+      </div>
+      <button type="submit" class="mt-4 bg-accent text-white px-6 py-2 rounded hover:bg-blue-600">Import Selected</button>
+    </form>
+  <% } %>
+</main>
+<%- include('../../partials/footer') %>
