@@ -1,4 +1,5 @@
 require('dotenv').config();
+
 const express = require('express');
 const mongoose = require('mongoose');
 const path = require('path');
@@ -8,7 +9,6 @@ const helmet = require('helmet');
 const rateLimit = require('express-rate-limit');
 const csrf = require('csurf');
 
-// Import route modules
 const authRoutes = require('./routes/auth');
 const devproofRoutes = require('./routes/devproof');
 const quickhireRoutes = require('./routes/quickhire');
@@ -26,70 +26,81 @@ const { notFoundHandler, errorHandler } = require('./middleware/errorHandlers');
 
 const app = express();
 
-// Connect to MongoDB
-mongoose.connect(process.env.MONGODB_URI, {
-  useNewUrlParser: true,
-  useUnifiedTopology: true,
-}).then(() => {
-  console.log('MongoDB connected');
-}).catch((err) => {
-  console.error('MongoDB connection error:', err);
-});
+mongoose
+  .connect(process.env.MONGODB_URI)
+  .then(() => console.log('[DB] MongoDB connected'))
+  .catch((err) => console.error('[DB] MongoDB connection error:', err.message));
 
-// Set up view engine
 app.set('view engine', 'ejs');
 app.set('views', path.join(__dirname, '../views'));
 
-// Middleware
-app.use(express.urlencoded({ extended: true }));
-app.use(express.json());
-app.use(helmet());
 app.disable('x-powered-by');
 
-// Session configuration
+app.use(
+  helmet({
+    contentSecurityPolicy: false,
+  })
+);
+
+app.use(express.urlencoded({ extended: false }));
+app.use(express.json());
+
+app.use(express.static(path.join(__dirname, '../public')));
+
 app.use(
   session({
-    secret: process.env.SESSION_SECRET || 'changeme',
+    secret: process.env.SESSION_SECRET || 'change-this-secret',
     resave: false,
     saveUninitialized: false,
-    store: MongoStore.create({ mongoUrl: process.env.MONGODB_URI }),
+    store: MongoStore.create({
+      mongoUrl: process.env.MONGODB_URI,
+      collectionName: 'sessions',
+    }),
     cookie: {
       httpOnly: true,
       secure: process.env.NODE_ENV === 'production',
       sameSite: 'lax',
-      maxAge: 1000 * 60 * 60 * 24, // 1 day
+      maxAge: 1000 * 60 * 60 * 24,
     },
   })
 );
 
-// CSRF protection
-app.use(csrf());
-
-// Make csrfToken and currentUser available in views
 app.use((req, res, next) => {
-  res.locals.csrfToken = req.csrfToken();
-  res.locals.currentUser = req.session.userId;
-  res.locals.session = req.session;
+  res.locals.currentUser = req.session?.userId || null;
+  res.locals.session = req.session || {};
+  res.locals.csrfToken = '';
   next();
 });
 
-// Rate limiter (global)
-const limiter = rateLimit({
-  windowMs: 15 * 60 * 1000, // 15 minutes
-  max: 100,
-  standardHeaders: true,
-  legacyHeaders: false,
+const csrfProtection = csrf();
+
+app.use((req, res, next) => {
+  csrfProtection(req, res, (err) => {
+    if (err) {
+      return res.status(403).render('errors/403', {
+        title: 'Forbidden',
+      });
+    }
+
+    res.locals.csrfToken = req.csrfToken();
+    return next();
+  });
 });
-app.use(limiter);
 
-// Serve static files
-app.use(express.static(path.join(__dirname, '../public')));
+app.use(
+  rateLimit({
+    windowMs: 15 * 60 * 1000,
+    max: 300,
+    standardHeaders: true,
+    legacyHeaders: false,
+  })
+);
 
-// Routes
 app.use('/', authRoutes);
 app.use('/dashboard/devproof', devproofRoutes);
 app.use('/dashboard/quickhire', quickhireRoutes);
 app.use('/dashboard/scrimlink', scrimlinkRoutes);
+app.use('/dashboard/profile', profileDashRoutes);
 app.use('/u', profileRoutes);
 app.use('/projects', projectRoutes);
 app.use('/hire', hireRoutes);
@@ -97,14 +108,12 @@ app.use('/teams', teamRoutes);
 app.use('/scrims', scrimRoutes);
 app.use('/messages', messageRoutes);
 app.use('/admin', adminRoutes);
-app.use('/dashboard/profile', profileDashRoutes);
 
-// 404 handler
 app.use(notFoundHandler);
-// Central error handler
 app.use(errorHandler);
 
 const PORT = process.env.PORT || 3000;
+
 app.listen(PORT, () => {
-  console.log(`Server running on http://localhost:${PORT}`);
+  console.log(`[SERVER] DevArena running on port ${PORT}`);
 });
