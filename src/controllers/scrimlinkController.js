@@ -1,6 +1,14 @@
 const { validationResult } = require('express-validator');
 const Team = require('../models/Team');
 
+function makeSlug(name) {
+  return String(name)
+    .toLowerCase()
+    .trim()
+    .replace(/[^a-z0-9]+/g, '-')
+    .replace(/^-+|-+$/g, '');
+}
+
 exports.dashboard = async (req, res) => {
   try {
     const teams = await Team.find({ creator: req.session.userId }).sort({ createdAt: -1 });
@@ -43,11 +51,21 @@ exports.createTeam = async (req, res) => {
   try {
     const { name, description } = req.body;
 
+    const baseSlug = makeSlug(name);
+    let slug = baseSlug;
+    let count = 1;
+
+    while (await Team.findOne({ slug })) {
+      slug = `${baseSlug}-${count}`;
+      count += 1;
+    }
+
     await Team.create({
       name: name.trim(),
+      slug,
       description: description?.trim() || '',
       creator: req.session.userId,
-      members: [req.session.userId],
+      tags: [],
     });
 
     return res.redirect('/scrimlink');
@@ -63,5 +81,42 @@ exports.createTeam = async (req, res) => {
       old: req.body,
       csrfToken: req.csrfToken(),
     });
+  }
+};
+
+exports.createScrim = async (req, res) => {
+  const errors = validationResult(req);
+
+  try {
+    const team = await Team.findById(req.params.teamId);
+
+    if (!team) {
+      return res.status(404).render('errors/404', {
+        title: 'Team Not Found',
+      });
+    }
+
+    if (String(team.creator) !== String(req.session.userId)) {
+      return res.status(403).render('errors/403', {
+        title: 'Forbidden',
+      });
+    }
+
+    if (!errors.isEmpty()) {
+      return res.status(400).render('teams/show', {
+        title: team.name,
+        team,
+        errors: errors.array(),
+        old: req.body,
+      });
+    }
+
+    // Scrim model is not added yet, so for now this route safely works.
+    // Later you can save description, region, and schedule into a Scrim collection.
+
+    return res.redirect(`/teams/${team.slug}`);
+  } catch (err) {
+    console.error('Create scrim error:', err);
+    return res.redirect('/teams');
   }
 };
