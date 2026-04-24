@@ -26,6 +26,8 @@ const { notFoundHandler, errorHandler } = require('./middleware/errorHandlers');
 
 const app = express();
 
+app.set('trust proxy', 1);
+
 mongoose
   .connect(process.env.MONGODB_URI)
   .then(() => console.log('[DB] MongoDB connected'))
@@ -51,7 +53,7 @@ app.use(
   session({
     secret: process.env.SESSION_SECRET || 'change-this-secret',
     resave: false,
-    saveUninitialized: false,
+    saveUninitialized: true,
     store: MongoStore.create({
       mongoUrl: process.env.MONGODB_URI,
       collectionName: 'sessions',
@@ -75,16 +77,25 @@ app.use((req, res, next) => {
 const csrfProtection = csrf();
 
 app.use((req, res, next) => {
-  csrfProtection(req, res, (err) => {
-    if (err) {
-      return res.status(403).render('errors/403', {
-        title: 'Forbidden',
-      });
-    }
+  if (['GET', 'HEAD', 'OPTIONS'].includes(req.method)) {
+    csrfProtection(req, res, (err) => {
+      if (!err) {
+        res.locals.csrfToken = req.csrfToken();
+      }
+      return next();
+    });
+  } else {
+    csrfProtection(req, res, (err) => {
+      if (err) {
+        return res.status(403).render('errors/403', {
+          title: 'Forbidden',
+        });
+      }
 
-    res.locals.csrfToken = req.csrfToken();
-    return next();
-  });
+      res.locals.csrfToken = req.csrfToken();
+      return next();
+    });
+  }
 });
 
 app.use(
