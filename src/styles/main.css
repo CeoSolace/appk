@@ -1,12 +1,131 @@
-@tailwind base;
-@tailwind components;
-@tailwind utilities;
-
-/* Custom styles */
+/* GLOBAL */
 body {
-  @apply bg-primary text-gray-200;
+  background: #0a0f1a;
+  color: #e6edf3;
+  font-family: system-ui, -apple-system, sans-serif;
+  margin: 0;
 }
 
-nav {
-  @apply bg-secondary shadow-md;
+/* HERO */
+.hero {
+  position: relative;
+  padding: 110px 20px 90px;
+  text-align: center;
+  overflow: hidden;
+}
+
+/* CLEAN NON-AI BACKGROUND */
+.hero-bg {
+  position: absolute;
+  inset: 0;
+  background:
+    radial-gradient(circle at 20% 30%, rgba(37, 99, 235, 0.12), transparent 40%),
+    radial-gradient(circle at 80% 20%, rgba(15, 23, 42, 0.6), transparent 50%),
+    linear-gradient(180deg, #0a0f1a 0%, #05080f 100%);
+  z-index: 0;
+}
+
+/* CONTENT */
+.hero-content {
+  position: relative;
+  z-index: 1;
+  max-width: 720px;
+  margin: 0 auto;
+}
+
+.eyebrow {
+  color: #64748b;
+  font-size: 0.8rem;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  margin-bottom: 14px;
+}
+
+.hero h1 {
+  font-size: 2.7rem;
+  font-weight: 700;
+  margin-bottom: 18px;
+  color: #f1f5f9;
+  line-height: 1.2;
+}
+
+.hero-copy {
+  color: #94a3b8;
+  font-size: 1.05rem;
+  margin-bottom: 30px;
+}
+
+/* BUTTONS */
+.hero-actions {
+  display: flex;
+  justify-content: center;
+  gap: 14px;
+}
+
+.btn-primary {
+  background: #2563eb;
+  color: white;
+  padding: 12px 24px;
+  border-radius: 10px;
+  font-weight: 600;
+  text-decoration: none;
+  transition: 0.2s;
+}
+
+.btn-primary:hover {
+  background: #1d4ed8;
+}
+
+.btn-secondary {
+  border: 1px solid #1e293b;
+  color: #cbd5f5;
+  padding: 12px 24px;
+  border-radius: 10px;
+  text-decoration: none;
+  transition: 0.2s;
+}
+
+.btn-secondary:hover {
+  background: #0f172a;
+}
+
+/* FEATURES */
+.feature-grid {
+  max-width: 1100px;
+  margin: 60px auto;
+  padding: 0 20px;
+  display: grid;
+  gap: 20px;
+  grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+}
+
+.feature-card {
+  background: #0d1322;
+  border: 1px solid #1e293b;
+  padding: 22px;
+  border-radius: 14px;
+  transition: 0.2s;
+}
+
+.feature-card:hover {
+  border-color: #334155;
+  transform: translateY(-3px);
+}
+
+.feature-card span {
+  font-size: 0.75rem;
+  color: #64748b;
+  display: block;
+  margin-bottom: 10px;
+}
+
+.feature-card h2 {
+  font-size: 1.3rem;
+  margin-bottom: 10px;
+  color: #f1f5f9;
+}
+
+.feature-card p {
+  color: #94a3b8;
+  font-size: 0.95rem;
 }
