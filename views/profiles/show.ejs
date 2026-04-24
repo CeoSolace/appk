@@ -1,191 +1,211 @@
 <%- include('../partials/head', { title }) %>
 
-<main class="min-h-screen bg-[#080b12] text-white">
-  <!-- Banner -->
-  <section class="relative h-56 md:h-64 overflow-hidden">
-    <% if (profile && profile.banner && profile.banner.url) { %>
-      <img src="<%= profile.banner.url %>" alt="Profile banner" class="absolute inset-0 h-full w-full object-cover">
-    <% } else { %>
-      <div class="absolute inset-0 bg-gradient-to-br from-[#0f172a] via-[#111827] to-[#020617]"></div>
-    <% } %>
-    <div class="absolute inset-0 bg-gradient-to-b from-black/20 via-black/35 to-[#080b12]"></div>
-  </section>
+<main class="min-h-screen text-white bg-[#0b0f14]">
+  <div class="min-h-screen bg-black/40 backdrop-blur-[1px]">
+    <div class="mx-auto flex min-h-screen w-full max-w-3xl flex-col px-4 py-8 sm:px-6">
 
-  <section class="container mx-auto max-w-5xl px-4 pb-16 -mt-24 relative z-10">
-    <!-- Profile Card -->
-    <div class="rounded-2xl border border-white/10 bg-[#0d111c]/95 shadow-xl overflow-hidden">
-      <div class="px-5 py-6 md:px-8 md:py-8 text-center">
+      <section class="overflow-hidden rounded-[32px] border border-white/10 bg-[#050b18]/80 shadow-[0_20px_80px_rgba(0,0,0,0.55)] backdrop-blur-xl">
 
-        <!-- Avatar -->
-        <div class="mx-auto mb-4">
-          <% if (profile && profile.avatar && profile.avatar.url) { %>
-            <img src="<%= profile.avatar.url %>" alt="Avatar" class="mx-auto h-28 w-28 rounded-full object-cover border-4 border-[#0d111c] shadow-lg">
-          <% } else { %>
-            <div class="mx-auto h-28 w-28 rounded-full bg-gradient-to-br from-blue-500 to-indigo-600 border-4 border-[#0d111c] flex items-center justify-center shadow-lg">
-              <span class="text-4xl font-black"><%= user.username.charAt(0).toUpperCase() %></span>
+        <% if (profile && profile.banner && profile.banner.url) { %>
+          <div class="h-48 w-full sm:h-56">
+            <img
+              src="<%= profile.banner.url %>"
+              alt="<%= profile.displayName || user.username %> banner"
+              class="h-full w-full object-cover"
+            />
+          </div>
+        <% } else { %>
+          <div class="h-24 w-full bg-gradient-to-r from-blue-900/60 via-indigo-900/50 to-slate-900/60 sm:h-28"></div>
+        <% } %>
+
+        <div class="px-5 pb-6 sm:px-8">
+          <div class="-mt-12 flex flex-col gap-4 sm:-mt-14 sm:flex-row sm:items-end sm:justify-between">
+
+            <div class="flex items-end gap-4">
+              <% if (profile && profile.avatar && profile.avatar.url) { %>
+                <img
+                  src="<%= profile.avatar.url %>"
+                  alt="<%= profile.displayName || user.username %>"
+                  class="h-24 w-24 rounded-full border-4 border-[#050b18] object-cover shadow-xl sm:h-28 sm:w-28"
+                />
+              <% } else { %>
+                <div class="h-24 w-24 rounded-full border-4 border-[#050b18] bg-gradient-to-br from-blue-500 to-indigo-600 flex items-center justify-center shadow-xl sm:h-28 sm:w-28">
+                  <span class="text-3xl font-black"><%= user.username.charAt(0).toUpperCase() %></span>
+                </div>
+              <% } %>
+
+              <div class="pb-1">
+                <h1 class="text-2xl font-black leading-tight sm:text-3xl">
+                  <%= profile.displayName || user.username %>
+                </h1>
+
+                <% if (user.username === 'itsnicbtw' || user.username === 'ceosolace') { %>
+                  <div class="mt-2 flex flex-wrap gap-2">
+                    <span class="inline-flex items-center rounded-full px-3 py-1 text-xs font-extrabold border bg-yellow-500/15 text-yellow-200 border-yellow-400/20">
+                      Founder
+                    </span>
+                  </div>
+                <% } %>
+              </div>
+            </div>
+
+            <% if (currentUser && currentUser !== user._id.toString()) { %>
+              <div class="sm:pb-2">
+                <a
+                  href="/messages/new/<%= user._id %>"
+                  class="inline-flex items-center rounded-full border border-white/10 bg-white/10 px-4 py-2 text-sm font-bold hover:bg-white/15 transition"
+                >
+                  Message
+                </a>
+              </div>
+            <% } %>
+          </div>
+
+          <div class="mt-5 space-y-3">
+            <% if (profile && profile.location) { %>
+              <div class="text-sm font-medium text-white/65">
+                <%= profile.location %>
+              </div>
+            <% } %>
+
+            <% if (profile && profile.bio) { %>
+              <p class="max-w-2xl text-sm leading-6 text-white/85 sm:text-base">
+                <%= profile.bio %>
+              </p>
+            <% } %>
+
+            <div class="text-sm font-semibold text-white/45">
+              /<%= user.username %>
+            </div>
+
+            <% if (profile && profile.tags && profile.tags.length) { %>
+              <div class="flex flex-wrap gap-2 pt-1">
+                <% profile.tags.forEach(function(tag) { %>
+                  <span class="rounded-full border border-white/10 bg-white/5 px-3 py-1 text-xs font-bold text-white/70">
+                    <%= tag %>
+                  </span>
+                <% }); %>
+              </div>
+            <% } %>
+          </div>
+
+          <% if (profile && profile.socials) { %>
+            <div class="mt-8 grid gap-3">
+              <% if (profile.socials.website) { %>
+                <a href="<%= profile.socials.website %>" target="_blank" rel="noopener noreferrer" class="rounded-2xl border border-white/10 bg-white/10 px-5 py-4 text-center font-extrabold hover:bg-white/15 transition">
+                  Website
+                </a>
+              <% } %>
+
+              <% if (profile.socials.github) { %>
+                <a href="<%= profile.socials.github %>" target="_blank" rel="noopener noreferrer" class="rounded-2xl border border-white/10 bg-white/10 px-5 py-4 text-center font-extrabold hover:bg-white/15 transition">
+                  GitHub
+                </a>
+              <% } %>
+
+              <% if (profile.socials.linkedin) { %>
+                <a href="<%= profile.socials.linkedin %>" target="_blank" rel="noopener noreferrer" class="rounded-2xl border border-white/10 bg-white/10 px-5 py-4 text-center font-extrabold hover:bg-white/15 transition">
+                  LinkedIn
+                </a>
+              <% } %>
+
+              <% if (profile.socials.twitter) { %>
+                <a href="<%= profile.socials.twitter %>" target="_blank" rel="noopener noreferrer" class="rounded-2xl border border-white/10 bg-white/10 px-5 py-4 text-center font-extrabold hover:bg-white/15 transition">
+                  Twitter / X
+                </a>
+              <% } %>
+
+              <% if (profile.socials.twitch) { %>
+                <a href="<%= profile.socials.twitch %>" target="_blank" rel="noopener noreferrer" class="rounded-2xl border border-white/10 bg-white/10 px-5 py-4 text-center font-extrabold hover:bg-white/15 transition">
+                  Twitch
+                </a>
+              <% } %>
+
+              <% if (profile.socials.youtube) { %>
+                <a href="<%= profile.socials.youtube %>" target="_blank" rel="noopener noreferrer" class="rounded-2xl border border-white/10 bg-white/10 px-5 py-4 text-center font-extrabold hover:bg-white/15 transition">
+                  YouTube
+                </a>
+              <% } %>
             </div>
           <% } %>
+
         </div>
+      </section>
 
-        <p class="text-sm text-blue-300 font-semibold">@<%= user.username %></p>
+      <div class="mt-5 grid gap-5">
 
-        <h1 class="mt-1 text-3xl md:text-4xl font-black tracking-tight">
-          <%= profile.displayName || user.username %>
-        </h1>
+        <% if (projects && projects.length && (!profile.visibility || profile.visibility.showProjects !== false)) { %>
+          <section class="rounded-[28px] border border-white/10 bg-[#050b18]/80 p-5 shadow-xl backdrop-blur-xl">
+            <p class="text-xs font-black uppercase tracking-[0.24em] text-blue-200/70">DevProof</p>
+            <h2 class="mt-2 text-xl font-black">Projects</h2>
 
-        <% if (profile && profile.bio) { %>
-          <p class="mx-auto mt-4 max-w-2xl text-zinc-300 leading-relaxed">
-            <%= profile.bio %>
-          </p>
-        <% } %>
-
-        <% if (profile && profile.location) { %>
-          <p class="mt-3 text-sm text-zinc-400">📍 <%= profile.location %></p>
-        <% } %>
-
-        <% if (profile && profile.tags && profile.tags.length) { %>
-          <div class="mt-5 flex flex-wrap justify-center gap-2">
-            <% profile.tags.forEach(function(tag) { %>
-              <span class="rounded-full border border-white/10 bg-white/5 px-3 py-1 text-xs font-medium text-zinc-300">
-                <%= tag %>
-              </span>
-            <% }); %>
-          </div>
-        <% } %>
-
-        <!-- Main Actions -->
-        <div class="mx-auto mt-6 grid max-w-xl gap-3 sm:grid-cols-2">
-          <% if (currentUser && currentUser !== user._id.toString()) { %>
-            <a href="/messages/new/<%= user._id %>" class="rounded-xl bg-blue-600 px-5 py-3 font-bold text-white hover:bg-blue-500 transition">
-              Message
-            </a>
-          <% } %>
-
-          <% if (hire && hire.isActive && (!profile.visibility || profile.visibility.showHire !== false)) { %>
-            <a href="/hire/<%= user.username %>" class="rounded-xl border border-white/10 bg-white/5 px-5 py-3 font-bold text-white hover:bg-white/10 transition">
-              Hire / Services
-            </a>
-          <% } %>
-        </div>
-
-        <!-- Social Links -->
-        <% if (profile && profile.socials) { %>
-          <div class="mx-auto mt-6 grid max-w-xl gap-3">
-            <% if (profile.socials.website) { %>
-              <a href="<%= profile.socials.website %>" target="_blank" rel="noopener noreferrer" class="rounded-xl border border-white/10 bg-white/5 px-5 py-3 font-semibold hover:bg-white/10 transition">
-                Website
-              </a>
-            <% } %>
-            <% if (profile.socials.github) { %>
-              <a href="<%= profile.socials.github %>" target="_blank" rel="noopener noreferrer" class="rounded-xl border border-white/10 bg-white/5 px-5 py-3 font-semibold hover:bg-white/10 transition">
-                GitHub
-              </a>
-            <% } %>
-            <% if (profile.socials.linkedin) { %>
-              <a href="<%= profile.socials.linkedin %>" target="_blank" rel="noopener noreferrer" class="rounded-xl border border-white/10 bg-white/5 px-5 py-3 font-semibold hover:bg-white/10 transition">
-                LinkedIn
-              </a>
-            <% } %>
-            <% if (profile.socials.twitter) { %>
-              <a href="<%= profile.socials.twitter %>" target="_blank" rel="noopener noreferrer" class="rounded-xl border border-white/10 bg-white/5 px-5 py-3 font-semibold hover:bg-white/10 transition">
-                Twitter / X
-              </a>
-            <% } %>
-            <% if (profile.socials.twitch) { %>
-              <a href="<%= profile.socials.twitch %>" target="_blank" rel="noopener noreferrer" class="rounded-xl border border-white/10 bg-white/5 px-5 py-3 font-semibold hover:bg-white/10 transition">
-                Twitch
-              </a>
-            <% } %>
-            <% if (profile.socials.youtube) { %>
-              <a href="<%= profile.socials.youtube %>" target="_blank" rel="noopener noreferrer" class="rounded-xl border border-white/10 bg-white/5 px-5 py-3 font-semibold hover:bg-white/10 transition">
-                YouTube
-              </a>
-            <% } %>
-          </div>
-        <% } %>
-      </div>
-    </div>
-
-    <!-- Professional Platform Sections -->
-    <div class="mt-6 grid gap-5 lg:grid-cols-3">
-
-      <% if (projects && projects.length && (!profile.visibility || profile.visibility.showProjects !== false)) { %>
-        <section class="rounded-2xl border border-white/10 bg-[#0d111c] p-5 shadow-lg">
-          <div class="mb-4">
-            <p class="text-xs uppercase tracking-widest text-blue-300 font-bold">DevProof</p>
-            <h2 class="text-xl font-black">Projects</h2>
-          </div>
-
-          <div class="space-y-3">
-            <% projects.forEach(function(project) { %>
-              <a href="/projects/<%= project.slug %>" class="block rounded-xl border border-white/10 bg-white/[0.03] p-4 hover:bg-white/[0.07] transition">
-                <h3 class="font-bold text-white"><%= project.name %></h3>
-                <% if (project.description) { %>
-                  <p class="mt-1 text-sm text-zinc-400 line-clamp-2"><%= project.description %></p>
-                <% } %>
-              </a>
-            <% }); %>
-          </div>
-        </section>
-      <% } %>
-
-      <% if (hire && hire.isActive && (!profile.visibility || profile.visibility.showHire !== false)) { %>
-        <section class="rounded-2xl border border-white/10 bg-[#0d111c] p-5 shadow-lg">
-          <div class="mb-4">
-            <p class="text-xs uppercase tracking-widest text-blue-300 font-bold">QuickHire</p>
-            <h2 class="text-xl font-black">Available for Work</h2>
-          </div>
-
-          <% if (hire.skills && hire.skills.length) { %>
-            <div class="mb-4 flex flex-wrap gap-2">
-              <% hire.skills.forEach(function(skill) { %>
-                <span class="rounded-full bg-blue-500/10 border border-blue-400/20 px-3 py-1 text-xs text-blue-200">
-                  <%= skill %>
-                </span>
+            <div class="mt-4 grid gap-3">
+              <% projects.forEach(function(project) { %>
+                <a href="/projects/<%= project.slug %>" class="rounded-2xl border border-white/10 bg-white/[0.06] p-4 hover:bg-white/[0.1] transition">
+                  <h3 class="font-black"><%= project.name %></h3>
+                  <% if (project.description) { %>
+                    <p class="mt-1 text-sm leading-6 text-white/60"><%= project.description %></p>
+                  <% } %>
+                </a>
               <% }); %>
             </div>
-          <% } %>
+          </section>
+        <% } %>
 
-          <div class="space-y-2 text-sm text-zinc-300">
-            <% if (hire.categories && hire.categories.length) { %>
-              <p><span class="text-zinc-500">Categories:</span> <%= hire.categories.join(', ') %></p>
+        <% if (hire && hire.isActive && (!profile.visibility || profile.visibility.showHire !== false)) { %>
+          <section class="rounded-[28px] border border-white/10 bg-[#050b18]/80 p-5 shadow-xl backdrop-blur-xl">
+            <p class="text-xs font-black uppercase tracking-[0.24em] text-blue-200/70">QuickHire</p>
+            <h2 class="mt-2 text-xl font-black">Available for Work</h2>
+
+            <% if (hire.skills && hire.skills.length) { %>
+              <div class="mt-4 flex flex-wrap gap-2">
+                <% hire.skills.forEach(function(skill) { %>
+                  <span class="rounded-full border border-blue-400/20 bg-blue-500/15 px-3 py-1 text-xs font-bold text-blue-200">
+                    <%= skill %>
+                  </span>
+                <% }); %>
+              </div>
             <% } %>
-            <% if (hire.pricing) { %>
-              <p><span class="text-zinc-500">Pricing:</span> <%= hire.pricing %></p>
-            <% } %>
-            <% if (hire.availability) { %>
-              <p><span class="text-zinc-500">Availability:</span> <%= hire.availability %></p>
-            <% } %>
-          </div>
 
-          <a href="/hire/<%= user.username %>" class="mt-5 block rounded-xl bg-blue-600 px-4 py-3 text-center font-bold hover:bg-blue-500 transition">
-            View Services
-          </a>
-        </section>
-      <% } %>
+            <div class="mt-4 space-y-2 text-sm text-white/70">
+              <% if (hire.categories && hire.categories.length) { %>
+                <p><span class="text-white/40">Categories:</span> <%= hire.categories.join(', ') %></p>
+              <% } %>
+              <% if (hire.pricing) { %>
+                <p><span class="text-white/40">Pricing:</span> <%= hire.pricing %></p>
+              <% } %>
+              <% if (hire.availability) { %>
+                <p><span class="text-white/40">Availability:</span> <%= hire.availability %></p>
+              <% } %>
+            </div>
 
-      <% if (teams && teams.length && (!profile.visibility || profile.visibility.showTeams !== false)) { %>
-        <section class="rounded-2xl border border-white/10 bg-[#0d111c] p-5 shadow-lg">
-          <div class="mb-4">
-            <p class="text-xs uppercase tracking-widest text-blue-300 font-bold">ScrimLink</p>
-            <h2 class="text-xl font-black">Teams</h2>
-          </div>
+            <a href="/hire/<%= user.username %>" class="mt-5 block rounded-2xl border border-white/10 bg-white/10 px-5 py-4 text-center font-extrabold hover:bg-white/15 transition">
+              View Services
+            </a>
+          </section>
+        <% } %>
 
-          <div class="space-y-3">
-            <% teams.forEach(function(team) { %>
-              <a href="/teams/<%= team.slug %>" class="block rounded-xl border border-white/10 bg-white/[0.03] p-4 hover:bg-white/[0.07] transition">
-                <h3 class="font-bold text-white"><%= team.name %></h3>
-                <% if (team.description) { %>
-                  <p class="mt-1 text-sm text-zinc-400 line-clamp-2"><%= team.description %></p>
-                <% } %>
-              </a>
-            <% }); %>
-          </div>
-        </section>
-      <% } %>
+        <% if (teams && teams.length && (!profile.visibility || profile.visibility.showTeams !== false)) { %>
+          <section class="rounded-[28px] border border-white/10 bg-[#050b18]/80 p-5 shadow-xl backdrop-blur-xl">
+            <p class="text-xs font-black uppercase tracking-[0.24em] text-blue-200/70">ScrimLink</p>
+            <h2 class="mt-2 text-xl font-black">Teams</h2>
 
+            <div class="mt-4 grid gap-3">
+              <% teams.forEach(function(team) { %>
+                <a href="/teams/<%= team.slug %>" class="rounded-2xl border border-white/10 bg-white/[0.06] p-4 hover:bg-white/[0.1] transition">
+                  <h3 class="font-black"><%= team.name %></h3>
+                  <% if (team.description) { %>
+                    <p class="mt-1 text-sm leading-6 text-white/60"><%= team.description %></p>
+                  <% } %>
+                </a>
+              <% }); %>
+            </div>
+          </section>
+        <% } %>
+
+      </div>
     </div>
-  </section>
+  </div>
 </main>
 
 <%- include('../partials/footer') %>
