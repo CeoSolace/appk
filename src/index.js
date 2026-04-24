@@ -77,25 +77,18 @@ app.use((req, res, next) => {
 const csrfProtection = csrf();
 
 app.use((req, res, next) => {
-  if (['GET', 'HEAD', 'OPTIONS'].includes(req.method)) {
-    csrfProtection(req, res, (err) => {
-      if (!err) {
-        res.locals.csrfToken = req.csrfToken();
-      }
-      return next();
-    });
-  } else {
-    csrfProtection(req, res, (err) => {
-      if (err) {
-        return res.status(403).render('errors/403', {
-          title: 'Forbidden',
-        });
-      }
+  csrfProtection(req, res, (err) => {
+    if (err) {
+      console.error('[CSRF]', err.message);
 
-      res.locals.csrfToken = req.csrfToken();
-      return next();
-    });
-  }
+      return res.status(403).render('errors/403', {
+        title: 'Forbidden',
+      });
+    }
+
+    res.locals.csrfToken = req.csrfToken();
+    return next();
+  });
 });
 
 app.use(
