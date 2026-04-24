@@ -5,14 +5,16 @@ const { requireAuth } = require('../middleware/auth');
 
 const router = express.Router();
 
-// Dashboard QuickHire
 router.get('/', requireAuth, quickhireController.dashboard);
+
 router.post(
   '/',
   requireAuth,
   [
-    body('pricing').trim().isLength({ max: 200 }).withMessage('Pricing info too long'),
-    body('availability').trim().isLength({ max: 200 }).withMessage('Availability info too long'),
+    body('pricing').optional({ checkFalsy: true }).trim().isLength({ max: 200 }),
+    body('availability').optional({ checkFalsy: true }).trim().isLength({ max: 200 }),
+    body('skills').optional({ checkFalsy: true }).trim().isLength({ max: 300 }),
+    body('categories').optional({ checkFalsy: true }).trim().isLength({ max: 300 }),
   ],
   quickhireController.postDashboard
 );
